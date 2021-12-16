@@ -9,7 +9,7 @@ source:
   sha256: 200a28469d574a370fa9b55cd92f112f8ad09f71674bdae514437039e953689b
 
 build:
-  number: 0
+  number: 1
   script:
     - export LDFLAGS="-undefined dynamic_lookup -bundle"  # [osx]
     - export LDFLAGS="$LDFLAGS -shared"  # [linux]
@@ -21,14 +21,16 @@ requirements:
     - {{ compiler('fortran') }}
   host:
     - python
-    - mkl-devel    {{ mkl }}
-    - numpy-devel  {{ numpy }}
+    - mkl-devel {{ mkl }}
+    - numpy-devel {{ numpy }}
     - pip
+    - setuptools
+    - wheel
   run:
     - python
     - scipy
     # - matplotlib
-    - numpy-devel  {{ numpy }}
+    - numpy-devel {{ numpy }}
 
 test:
   imports:
@@ -44,6 +46,11 @@ test:
     - pymc.gp.cov_funs.isotropic_cov_funs
     - pymc.gp.incomplete_chol
     - pymc.gp.linalg_utils
+  requires:
+    - pip
+
+  commands:
+    - pip check
 
 about:
   home: http://github.com/pymc-devs/pymc
