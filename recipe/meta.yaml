@@ -32,7 +32,7 @@ requirements:
     - cloudpickle
     - fastprogress 1.0.0
     - pandas 1.5.3
-    - pytensor 2.13.1
+    - pytensor 2.12.3
     - scipy 1.9.3
     - typing-extensions 4.6.3
   run:
