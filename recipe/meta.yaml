@@ -15,7 +15,7 @@ build:
   script:
     - export LDFLAGS="-undefined dynamic_lookup -bundle"  # [osx]
     - export LDFLAGS="$LDFLAGS -shared"  # [linux]
-    - "python setup.py install"
+    - python -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   build:
