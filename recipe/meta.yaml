@@ -59,7 +59,7 @@ test:
     - pymc.gp.linalg_utils
 
 about:
-  home: http://github.com/pymc-devs/pymc
+  home: https://www.pymc.io/welcome.html
   license: AFL-3.0
   license_family: OTHER
   license_file: LICENSE
@@ -70,7 +70,7 @@ about:
     Monte Carlo. Its flexibility and extensibility make it applicable to a large suite of problems. Along with core
     sampling functionality, PyMC includes methods for summarizing output, plotting, goodness-of-fit and convergence
     diagnostics.
-  doc_url: http://pymc-devs.github.io/pymc/
+  doc_url: https://www.pymc.io/projects/docs/en/stable/api.html
   dev_url: https://github.com/pymc-devs/pymc
 
 extra:
