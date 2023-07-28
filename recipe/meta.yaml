@@ -26,11 +26,6 @@ requirements:
     - pip
     - setuptools
     - numpy {{ numpy }}
-    - cachetools 4.2.2
-    - cloudpickle
-    - fastprogress 1.0.0
-    - pandas 1.5.3
-    - typing-extensions 4.6.3
   run:
     - python
     - numpy >=1.15.0
