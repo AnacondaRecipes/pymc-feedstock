@@ -26,6 +26,7 @@ requirements:
     - pip
     - setuptools
     - numpy {{ numpy }}
+    - wheel
   run:
     - python
     - numpy >=1.15.0
@@ -54,6 +55,9 @@ test:
     - pymc.gp.linalg_utils
   requires:
     - pytest-cov
+    - pip
+  commands:
+    - pip check
 
 about:
   home: https://www.pymc.io/welcome.html
