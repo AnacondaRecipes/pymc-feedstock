@@ -40,6 +40,8 @@ requirements:
     - python
     - scipy
     - numpy {{ numpy }}
+    - pytensor
+    - arviz
 
 test:
   imports:
