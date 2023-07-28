@@ -13,9 +13,9 @@ build:
   number: 0
   # skip because arviz is not supported for py38
   skip: True  # [py<39]
-  script_env:                              # [osx]
-    - LDFLAGS="-undefined dynamic_lookup"  # [osx]
   script:
+    - export LDFLAGS="-undefined dynamic_lookup"  # [osx]
+    - export LDFLAGS="$LDFLAGS -shared"  # [linux]
     - python -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
