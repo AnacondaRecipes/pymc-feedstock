@@ -25,8 +25,6 @@ requirements:
     - python
     - pip
     - setuptools
-    - mkl-devel  {{ mkl }}      # [blas_impl == "mkl"]
-    - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
     - numpy {{ numpy }}
     - cachetools 4.2.2
     - cloudpickle
