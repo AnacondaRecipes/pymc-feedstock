@@ -28,20 +28,22 @@ requirements:
     - mkl-devel  {{ mkl }}      # [blas_impl == "mkl"]
     - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
     - numpy {{ numpy }}
-    - arviz >=0.13.0
     - cachetools 4.2.2
     - cloudpickle
     - fastprogress 1.0.0
     - pandas 1.5.3
-    - pytensor 2.12.3
-    - scipy 1.9.3
     - typing-extensions 4.6.3
   run:
     - python
-    - scipy
-    - numpy {{ numpy }}
-    - pytensor
-    - arviz
+    - numpy >=1.15.0
+    - arviz >=0.13.0
+    - cachetools >=4.2.1
+    - cloudpickle
+    - fastprogress >=0.2.0
+    - pandas >=0.24.0
+    - pytensor >=2.12.0,<2.13
+    - scipy >=1.4.1
+    - typing-extensions >=3.7.4
 
 test:
   imports:
