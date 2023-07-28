@@ -42,19 +42,14 @@ requirements:
 test:
   imports:
     - pymc
-    - pymc.database
-    - pymc.examples
+    - pymc.backends
+    - pymc.distributions
     - pymc.gp
-    - pymc.gp.cov_funs
-    - pymc.Container_values
-    - pymc.LazyFunction
-    - pymc.flib
-    - pymc.gp.cov_funs.distances
-    - pymc.gp.cov_funs.isotropic_cov_funs
-    - pymc.gp.incomplete_chol
-    - pymc.gp.linalg_utils
+    - pymc.step_methods
+    - pymc.tuning
+    - pymc.variational
+    - pymc.ode
   requires:
-    - pytest-cov
     - pip
   commands:
     - pip check
