@@ -15,7 +15,6 @@ build:
   skip: True  # [py<39]
   script_env:
     - LDFLAGS="-undefined dynamic_lookup"  # [osx]
-    - LDFLAGS="$LDFLAGS -shared"  # [linux]
   script:
     - python -m pip install . -vv --no-deps --no-build-isolation
 
