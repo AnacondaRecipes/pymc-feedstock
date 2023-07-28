@@ -59,6 +59,8 @@ test:
     - pymc.gp.cov_funs.isotropic_cov_funs
     - pymc.gp.incomplete_chol
     - pymc.gp.linalg_utils
+  requires:
+    - pytest-cov
 
 about:
   home: https://www.pymc.io/welcome.html
