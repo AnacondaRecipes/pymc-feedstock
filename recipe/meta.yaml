@@ -27,8 +27,7 @@ requirements:
     - setuptools
     - mkl-devel  {{ mkl }}      # [blas_impl == "mkl"]
     - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
-    - numpy-devel  {{ numpy }}  # [not (osx and arm64) and py<=39]
-    - numpy {{ numpy }}         # [(osx and arm64) or py>39]
+    - numpy {{ numpy }}
     - arviz >=0.13.0
     - cachetools 4.2.2
     - cloudpickle
@@ -40,8 +39,7 @@ requirements:
   run:
     - python
     - scipy
-    - numpy-devel  {{ numpy }}  # [not (osx and arm64) and py<=39]
-    - numpy {{ numpy }}         # [(osx and arm64) or py>39]
+    - numpy {{ numpy }}
 
 test:
   imports:
