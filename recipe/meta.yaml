@@ -19,7 +19,6 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('fortran') }}
-    #- {{ compiler('gcc')}}
   host:
     - python
     - pip
@@ -38,7 +37,7 @@ requirements:
     - scipy <1.13
     - rich >=13.7.1
     - typing-extensions >=3.7.4
-    - threadpoolctl>=3.1.0,<4.0.0
+    - threadpoolctl >=3.1.0,<4.0.0
 
 test:
   source_files:
