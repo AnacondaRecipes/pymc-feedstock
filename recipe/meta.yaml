@@ -11,7 +11,6 @@ source:
 
 build:
   number: 0
-  # skip because arviz is not supported for py38
   skip: True  # [py<=310]
   script:
     - python -m pip install . -vv --no-deps --no-build-isolation
@@ -55,8 +54,10 @@ test:
     - pymc.ode
   requires:
     - pip
+    - pytest
   commands:
     - pip check
+    - pytest -v tests/model/test_core.py
 
 about:
   home: https://www.pymc.io/welcome.html
