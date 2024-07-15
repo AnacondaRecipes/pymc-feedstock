@@ -30,7 +30,6 @@ requirements:
     - arviz >=0.13.0
     - cachetools >=4.2.1
     - cloudpickle
-    - fastprogress >=0.2.0
     - pandas >=0.24.0
     - pytensor >=2.23,<2.24
       # Reverting scipy to <1.13 due to pymc import failure that was caused due to older version of arviz
