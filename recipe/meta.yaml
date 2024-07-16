@@ -1,4 +1,4 @@
-{% set version = "5.6.1" %}
+{% set version = "5.16.1" %}
 {% set name = "pymc" %}
 
 package:
@@ -7,12 +7,11 @@ package:
 
 source:
   url: https://github.com/pymc-devs/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 3445f91136e44fe02a3e5029b2ececd262bc6623d4622c02cc47da21fa634be2
+  sha256: 00eff0ccc7c06029aab2c580524f101e922315d3937a82d116b842065a120847
 
 build:
   number: 0
-  # skip because arviz is not supported for py38
-  skip: True  # [py<39]
+  skip: True  # [py<=310]
   script:
     - python -m pip install . -vv --no-deps --no-build-isolation
 
@@ -31,13 +30,17 @@ requirements:
     - arviz >=0.13.0
     - cachetools >=4.2.1
     - cloudpickle
-    - fastprogress >=0.2.0
     - pandas >=0.24.0
-    - pytensor >=2.12.0,<2.13
-    - scipy >=1.4.1
+    - pytensor >=2.23,<2.24
+      # Reverting scipy to <1.13 due to pymc import failure that was caused due to older version of arviz
+    - scipy >=1.4.1,<1.13
+    - rich >=13.7.1
     - typing-extensions >=3.7.4
+    - threadpoolctl >=3.1.0,<4.0.0
 
 test:
+  source_files:
+    - tests
   imports:
     - pymc
     - pymc.backends
@@ -49,13 +52,15 @@ test:
     - pymc.ode
   requires:
     - pip
+    - pytest
   commands:
     - pip check
+    - pytest -v tests/model/test_core.py
 
 about:
   home: https://www.pymc.io/welcome.html
-  license: Apache-2.0
-  license_family: Apache
+  license: Apache-2.0 AND MIT
+  license_family: OTHER
   license_file: LICENSE
   summary: 'PyMC: Bayesian Stochastic Modelling in Python'
 
