@@ -59,8 +59,8 @@ test:
 
 about:
   home: https://www.pymc.io/welcome.html
-  license: Apache-2.0
-  license_family: Apache
+  license: Apache-2.0 AND MIT
+  license_family: OTHER
   license_file: LICENSE
   summary: 'PyMC: Bayesian Stochastic Modelling in Python'
 
