@@ -1,4 +1,4 @@
-{% set version = "5.16.1" %}
+{% set version = "5.23.0" %}
 {% set name = "pymc" %}
 
 package:
@@ -7,11 +7,11 @@ package:
 
 source:
   url: https://github.com/pymc-devs/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 00eff0ccc7c06029aab2c580524f101e922315d3937a82d116b842065a120847
+  sha256: 55e59c225b3515e113c545fd17c35167dcb15bd62c0278fd1e9eb996e0a25da5
 
 build:
   number: 0
-  skip: True  # [py<=310]
+  skip: true  # [py<=310]
   script:
     - python -m pip install . -vv --no-deps --no-build-isolation
 
@@ -32,7 +32,7 @@ requirements:
     - cloudpickle
     - pandas >=0.24.0
     - pytensor >=2.23,<2.24
-      # Reverting scipy to <1.13 due to pymc import failure that was caused due to older version of arviz
+    # Reverting scipy to <1.13 due to pymc import failure that was caused due to older version of arviz
     - scipy >=1.4.1,<1.13
     - rich >=13.7.1
     - typing-extensions >=3.7.4
@@ -62,8 +62,7 @@ about:
   license: Apache-2.0 AND MIT
   license_family: OTHER
   license_file: LICENSE
-  summary: 'PyMC: Bayesian Stochastic Modelling in Python'
-
+  summary: PyMC: Bayesian Stochastic Modelling in Python
   description: |
     PyMC is a python module that implements Bayesian statistical models and fitting algorithms, including Markov chain
     Monte Carlo. Its flexibility and extensibility make it applicable to a large suite of problems. Along with core
