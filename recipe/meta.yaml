@@ -7,13 +7,13 @@ package:
 
 source:
   url: https://github.com/pymc-devs/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 55e59c225b3515e113c545fd17c35167dcb15bd62c0278fd1e9eb996e0a25da5
+  sha256: 8d27f49167f054b707eaa70b02f45033c8a98c1e1ea427ec82bb27fc24f1bafd
 
 build:
   number: 0
   skip: true  # [py<=310]
   script:
-    - python -m pip install . -vv --no-deps --no-build-isolation
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   build:
@@ -24,16 +24,17 @@ requirements:
     - pip
     - setuptools
     - wheel
+    - versioneer
   run:
     - python
-    - numpy >=1.15.0
+    - numpy >=1.25.0
     - arviz >=0.13.0
     - cachetools >=4.2.1
     - cloudpickle
     - pandas >=0.24.0
-    - pytensor >=2.23,<2.24
-    # Reverting scipy to <1.13 due to pymc import failure that was caused due to older version of arviz
-    - scipy >=1.4.1,<1.13
+    - pytensor >=2.31.2,<2.32
+    # scipy was limited to <1.13 due to pymc import failure that was caused due to older version of arviz
+    - scipy >=1.4.1
     - rich >=13.7.1
     - typing-extensions >=3.7.4
     - threadpoolctl >=3.1.0,<4.0.0
