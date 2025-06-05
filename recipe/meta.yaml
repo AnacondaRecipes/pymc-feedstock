@@ -62,7 +62,7 @@ about:
   license: Apache-2.0 AND MIT
   license_family: OTHER
   license_file: LICENSE
-  summary: PyMC: Bayesian Stochastic Modelling in Python
+  summary: PyMC - Bayesian Stochastic Modelling in Python
   description: |
     PyMC is a python module that implements Bayesian statistical models and fitting algorithms, including Markov chain
     Monte Carlo. Its flexibility and extensibility make it applicable to a large suite of problems. Along with core
