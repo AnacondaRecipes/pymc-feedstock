@@ -6,7 +6,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/pymc-devs/{{ name }}/archive/v{{ version }}.tar.gz
+  url: https://github.com/{{ name }}-devs/{{ name }}/archive/v{{ version }}.tar.gz
   sha256: 8d27f49167f054b707eaa70b02f45033c8a98c1e1ea427ec82bb27fc24f1bafd
 
 build:
