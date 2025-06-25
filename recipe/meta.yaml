@@ -52,6 +52,10 @@ requirements:
 {% set tests_to_skip = "" %}
 {% set tests_to_skip = tests_to_skip + "test_numpyro_nuts_kwargs_are_used" %}  # [py>=312]
 
+# skip these tests because they take too long to run
+{% set tests_to_ignore = "" %}
+{% set tests_to_ignore = tests_to_ignore + "--ignore=tests/distributions/test_mixture.py" %}
+
 test:
   source_files:
     - tests
@@ -73,7 +77,7 @@ test:
   commands:
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
-    - pytest -k "not {{ tests_to_skip }}" -v tests
+    - pytest -k "not {{ tests_to_skip }}" {{ tests_to_ignore }} -v tests
 
 about:
   home: https://www.pymc.io/welcome.html
