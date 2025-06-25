@@ -1,0 +1,90 @@
+From 3b4245db90e2ad0eb0ef7af5389b59adb4aa7741 Mon Sep 17 00:00:00 2001
+From: Jack Olivieri <jolivieri@anaconda.com>
+Date: Wed, 25 Jun 2025 17:07:42 +0200
+Subject: [PATCH] patch out numpyro
+
+---
+ tests/sampling/test_jax.py | 60 +++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
+
+diff --git a/tests/sampling/test_jax.py b/tests/sampling/test_jax.py
+index 4aafc0357..52feb0b90 100644
+--- a/tests/sampling/test_jax.py
++++ b/tests/sampling/test_jax.py
+@@ -27,7 +27,7 @@ import pytensor
+ import pytensor.tensor as pt
+ import pytest
+ 
+-from numpyro.infer import MCMC
++# from numpyro.infer import MCMC  # Commented out since tests involving MCMC are being skipped
+ from pytensor.compile import SharedVariable
+ from pytensor.graph import graph_inputs
+ 
+@@ -413,35 +413,35 @@ def test_seeding(chains, random_seed, sampler):
+         assert np.all(result2.posterior["x"].sel(chain=0) != result2.posterior["x"].sel(chain=1))
+ 
+ 
+-@mock.patch("numpyro.infer.MCMC")
+-def test_numpyro_nuts_kwargs_are_used(mocked: mock.MagicMock):
+-    mocked.side_effect = MCMC
+-
+-    step_size = 0.13
+-    dense_mass = True
+-    adapt_step_size = False
+-    target_accept = 0.78
+-
+-    with pm.Model():
+-        pm.Normal("a")
+-        sample_numpyro_nuts(
+-            10,
+-            tune=10,
+-            chains=1,
+-            target_accept=target_accept,
+-            nuts_kwargs={
+-                "step_size": step_size,
+-                "dense_mass": dense_mass,
+-                "adapt_step_size": adapt_step_size,
+-            },
+-        )
+-    mocked.assert_called_once()
+-    nuts_sampler = mocked.call_args.args[0]
+-    assert nuts_sampler._step_size == step_size
+-    assert nuts_sampler._dense_mass == dense_mass
+-    assert nuts_sampler._adapt_step_size == adapt_step_size
+-    assert nuts_sampler._adapt_mass_matrix
+-    assert nuts_sampler._target_accept_prob == target_accept
++# @mock.patch("numpyro.infer.MCMC")
++# def test_numpyro_nuts_kwargs_are_used(mocked: mock.MagicMock):
++#     mocked.side_effect = MCMC
++
++#     step_size = 0.13
++#     dense_mass = True
++#     adapt_step_size = False
++#     target_accept = 0.78
++
++#     with pm.Model():
++#         pm.Normal("a")
++#         sample_numpyro_nuts(
++#             10,
++#             tune=10,
++#             chains=1,
++#             target_accept=target_accept,
++#             nuts_kwargs={
++#                 "step_size": step_size,
++#                 "dense_mass": dense_mass,
++#                 "adapt_step_size": adapt_step_size,
++#             },
++#         )
++#     mocked.assert_called_once()
++#     nuts_sampler = mocked.call_args.args[0]
++#     assert nuts_sampler._step_size == step_size
++#     assert nuts_sampler._dense_mass == dense_mass
++#     assert nuts_sampler._adapt_step_size == adapt_step_size
++#     assert nuts_sampler._adapt_mass_matrix
++#     assert nuts_sampler._target_accept_prob == target_accept
+ 
+ 
+ @pytest.mark.parametrize(
+-- 
+2.39.5 (Apple Git-154)
+

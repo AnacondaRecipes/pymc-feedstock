@@ -1,0 +1,256 @@
+From 24920810da58697ccbdfc426ee7d5267a6e46576 Mon Sep 17 00:00:00 2001
+From: Jack Olivieri <jolivieri@anaconda.com>
+Date: Wed, 25 Jun 2025 11:21:00 +0200
+Subject: [PATCH] patch out tests that depend on numdifftools
+
+---
+ tests/logprob/test_transform_value.py | 219 +-------------------------
+ 1 file changed, 4 insertions(+), 215 deletions(-)
+
+diff --git a/tests/logprob/test_transform_value.py b/tests/logprob/test_transform_value.py
+index 070fb93ed..77a7252fb 100644
+--- a/tests/logprob/test_transform_value.py
++++ b/tests/logprob/test_transform_value.py
+@@ -19,9 +19,9 @@ import pytensor
+ import pytest
+ import scipy as sp
+ 
+-from numdifftools import Derivative, Jacobian
+-from pytensor import scan
+-from pytensor import tensor as pt
++# from numdifftools import Derivative, Jacobian
++import pytensor.scan
++import pytensor.tensor as pt
+ from pytensor.compile.builders import OpFromGraph
+ from pytensor.graph import FunctionGraph
+ from pytensor.graph.basic import equal_computations
+@@ -83,217 +83,6 @@ def test_original_values_output_dict():
+     assert p_vv in logp_dict
+ 
+ 
+-@pytest.mark.parametrize(
+-    "pt_dist, dist_params, sp_dist, size",
+-    [
+-        (pt.random.uniform, (0, 1), sp.stats.uniform, ()),
+-        (
+-            pt.random.pareto,
+-            (1.5, 10.5),
+-            lambda b, scale: sp.stats.pareto(b, scale=scale),
+-            (),
+-        ),
+-        (
+-            pt.random.triangular,
+-            (1.5, 3.0, 10.5),
+-            lambda lower, mode, upper: sp.stats.triang(
+-                (mode - lower) / (upper - lower), loc=lower, scale=upper - lower
+-            ),
+-            (),
+-        ),
+-        (
+-            pt.random.halfnormal,
+-            (0, 1),
+-            sp.stats.halfnorm,
+-            (),
+-        ),
+-        pytest.param(
+-            pt.random.wald,
+-            (1.5, 10.5),
+-            lambda mean, scale: sp.stats.invgauss(mean / scale, scale=scale),
+-            (),
+-            marks=pytest.mark.xfail(
+-                reason="We don't use PyTensor's Wald operator",
+-                raises=NotImplementedError,
+-            ),
+-        ),
+-        (
+-            pt.random.exponential,
+-            (1.5,),
+-            lambda mu: sp.stats.expon(scale=mu),
+-            (),
+-        ),
+-        pytest.param(
+-            pt.random.lognormal,
+-            (-1.5, 10.5),
+-            lambda mu, sigma: sp.stats.lognorm(s=sigma, loc=0, scale=np.exp(mu)),
+-            (),
+-        ),
+-        (
+-            pt.random.lognormal,
+-            (-1.5, 1.5),
+-            lambda mu, sigma: sp.stats.lognorm(s=sigma, scale=np.exp(mu)),
+-            (),
+-        ),
+-        (
+-            pt.random.halfcauchy,
+-            (1.5, 10.5),
+-            lambda alpha, beta: sp.stats.halfcauchy(loc=alpha, scale=beta),
+-            (),
+-        ),
+-        (
+-            pt.random.gamma,
+-            (1.5, 10.5),
+-            lambda alpha, inv_beta: sp.stats.gamma(alpha, scale=1.0 / inv_beta),
+-            (),
+-        ),
+-        (
+-            pt.random.invgamma,
+-            (1.5, 10.5),
+-            lambda alpha, beta: sp.stats.invgamma(alpha, scale=beta),
+-            (),
+-        ),
+-        (
+-            pm.ChiSquared.dist,
+-            (1.5,),
+-            lambda df: sp.stats.chi2(df),
+-            (),
+-        ),
+-        pytest.param(
+-            pt.random.weibull,
+-            (1.5,),
+-            lambda c: sp.stats.weibull_min(c),
+-            (),
+-            marks=pytest.mark.xfail(
+-                reason="We don't use PyTensor's Weibull operator",
+-                raises=NotImplementedError,
+-            ),
+-        ),
+-        (
+-            pt.random.beta,
+-            (1.5, 1.5),
+-            lambda alpha, beta: sp.stats.beta(alpha, beta),
+-            (),
+-        ),
+-        (
+-            pt.random.vonmises,
+-            (1.5, 10.5),
+-            lambda mu, kappa: sp.stats.vonmises(kappa, loc=mu),
+-            (),
+-        ),
+-        (
+-            pt.random.dirichlet,
+-            (np.array([0.7, 0.3]),),
+-            lambda alpha: sp.stats.dirichlet(alpha),
+-            (),
+-        ),
+-        (
+-            pt.random.dirichlet,
+-            (np.array([[0.7, 0.3], [0.9, 0.1]]),),
+-            lambda alpha: DirichletScipyDist(alpha),
+-            None,
+-        ),
+-        pytest.param(
+-            pt.random.dirichlet,
+-            (np.array([0.3, 0.7]),),
+-            lambda alpha: DirichletScipyDist(alpha),
+-            (3, 2),
+-        ),
+-    ],
+-)
+-def test_default_value_transform_logprob(pt_dist, dist_params, sp_dist, size):
+-    """
+-    This test takes a `RandomVariable` type, plus parameters, and uses it to
+-    construct a variable ``a`` that's used in the graph ``b =
+-    pt.random.normal(a, 1.0)``.  The transformed log-probability is then
+-    computed for ``b``.  We then test that the log-probability of ``a`` is
+-    properly transformed, as well as any instances of ``a`` that are used
+-    elsewhere in the graph (i.e. in ``b``), by comparing the graph for the
+-    transformed log-probability with the SciPy-derived log-probability--using a
+-    numeric approximation to the Jacobian term.
+-
+-    TODO: This test is rather redundant with those in tess/distributions/test_transform.py
+-    """
+-
+-    a = pt_dist(*dist_params, size=size)
+-    a.name = "a"
+-    a_value_var = pt.tensor(dtype=a.dtype, shape=(None,) * a.ndim)
+-    a_value_var.name = "a_value"
+-
+-    b = pt.random.normal(a, 1.0)
+-    b.name = "b"
+-    b_value_var = b.clone()
+-    b_value_var.name = "b_value"
+-
+-    transform = _default_transform(a.owner.op, a)
+-    transform_rewrite = TransformValuesRewrite({a_value_var: transform})
+-    res = conditional_logp({a: a_value_var, b: b_value_var}, extra_rewrites=transform_rewrite)
+-    res_combined = pt.sum([pt.sum(factor) for factor in res.values()])
+-
+-    test_val_rng = np.random.RandomState(3238)
+-
+-    logp_vals_fn = pytensor.function([a_value_var, b_value_var], res_combined)
+-
+-    a_forward_fn = pytensor.function([a_value_var], transform.forward(a_value_var, *a.owner.inputs))
+-    a_backward_fn = pytensor.function(
+-        [a_value_var], transform.backward(a_value_var, *a.owner.inputs)
+-    )
+-    log_jac_fn = pytensor.function(
+-        [a_value_var],
+-        transform.log_jac_det(a_value_var, *a.owner.inputs),
+-        on_unused_input="ignore",
+-    )
+-
+-    for i in range(10):
+-        a_dist = sp_dist(*dist_params)
+-        a_val = a_dist.rvs(size=size, random_state=test_val_rng).astype(a_value_var.dtype)
+-        b_dist = sp.stats.norm(a_val, 1.0)
+-        b_val = b_dist.rvs(random_state=test_val_rng).astype(b_value_var.dtype)
+-
+-        a_trans_value = a_forward_fn(a_val)
+-
+-        if a_val.ndim > 0:
+-
+-            def jacobian_estimate_novec(value):
+-                dim_diff = a_val.ndim - value.ndim
+-                if dim_diff > 0:
+-                    # Make sure the dimensions match the expected input
+-                    # dimensions for the compiled backward transform function
+-                    def a_backward_fn_(x):
+-                        x_ = np.expand_dims(x, axis=list(range(dim_diff)))
+-                        return a_backward_fn(x_).squeeze()
+-
+-                else:
+-                    a_backward_fn_ = a_backward_fn
+-
+-                jacobian_val = Jacobian(a_backward_fn_)(value)
+-
+-                n_missing_dims = jacobian_val.shape[0] - jacobian_val.shape[1]
+-                if n_missing_dims > 0:
+-                    missing_bases = np.eye(jacobian_val.shape[0])[..., -n_missing_dims:]
+-                    jacobian_val = np.concatenate([jacobian_val, missing_bases], axis=-1)
+-
+-                return np.linalg.slogdet(jacobian_val)[-1]
+-
+-            jacobian_estimate = np.vectorize(jacobian_estimate_novec, signature="(n)->()")
+-
+-            exp_log_jac_val = jacobian_estimate(a_trans_value)
+-        else:
+-            jacobian_val = np.atleast_2d(Derivative(a_backward_fn, step=1e-6)(a_trans_value))
+-            exp_log_jac_val = np.linalg.slogdet(jacobian_val)[-1]
+-
+-        log_jac_val = log_jac_fn(a_trans_value)
+-        np.testing.assert_allclose(exp_log_jac_val, log_jac_val, rtol=1e-4, atol=1e-10)
+-
+-        exp_logprob_val = a_dist.logpdf(a_val).sum()
+-        exp_logprob_val += exp_log_jac_val.sum()
+-        exp_logprob_val += b_dist.logpdf(b_val).sum()
+-
+-        logprob_val = logp_vals_fn(a_trans_value, b_val)
+-
+-        np.testing.assert_allclose(exp_logprob_val, logprob_val, rtol=1e-4, atol=1e-10)
+-
+-
+ @pytest.mark.parametrize("use_jacobian", [True, False])
+ def test_value_transform_logprob_nojac(use_jacobian):
+     X_rv = pt.random.halfnormal(0, 3, name="X")
+@@ -525,7 +314,7 @@ def test_scan_transform():
+         update = {next_innov.owner.inputs[0]: next_innov.owner.outputs[0]}
+         return next_innov, update
+ 
+-    innov, _ = scan(
++    innov, _ = pytensor.scan(
+         fn=scan_step,
+         outputs_info=[init],
+         n_steps=4,
+-- 
+2.39.5 (Apple Git-154)
+
