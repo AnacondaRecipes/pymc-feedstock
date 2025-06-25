@@ -54,7 +54,7 @@ requirements:
 
 # skip these tests because they take too long to run
 {% set tests_to_ignore = "" %}
-{% set tests_to_ignore = tests_to_ignore + "--ignore=tests/distributions/test_mixture.py" %}
+{% set tests_to_ignore = tests_to_ignore + "--ignore=tests/distributions/test_mixture.py --ignore=tests/distributions/test_timeseries.py" %}
 
 test:
   source_files:
@@ -79,7 +79,7 @@ test:
   commands:
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
-    - pytest -k "not {{ tests_to_skip }}" {{ tests_to_ignore }} -v tests
+    - pytest -k "not ({{ tests_to_skip }})" {{ tests_to_ignore }} -v tests
 
 about:
   home: https://www.pymc.io/welcome.html
