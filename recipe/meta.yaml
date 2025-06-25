@@ -74,6 +74,8 @@ test:
     - jax
     - zarr
     - sfe1ed40::numpyro  # [py<312]
+    # to avoid error about np.PINF
+    - numpy >=1.25.0,<2
   commands:
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
