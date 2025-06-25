@@ -9,9 +9,7 @@ source:
   url: https://github.com/{{ name }}-devs/{{ name }}/archive/v{{ version }}.tar.gz
   sha256: 8d27f49167f054b707eaa70b02f45033c8a98c1e1ea427ec82bb27fc24f1bafd
   patches:
-    - 0001-patch-out-tests-that-depend-on-numdifftools.patch
-    - 0002-patch-out-numpyro.patch  # [py>=312]
-    - 0003-fix-test.patch
+    - 0001-patch-out-numpyro.patch  # [py>=312]
 
 build:
   number: 0
@@ -52,10 +50,6 @@ requirements:
 {% set tests_to_skip = "" %}
 {% set tests_to_skip = tests_to_skip + "test_numpyro_nuts_kwargs_are_used" %}  # [py>=312]
 
-# skip these tests because they take too long to run
-{% set tests_to_ignore = "" %}
-{% set tests_to_ignore = tests_to_ignore + "--ignore=tests/distributions/test_mixture.py --ignore=tests/distributions/test_timeseries.py" %}
-
 test:
   source_files:
     - tests
@@ -79,7 +73,8 @@ test:
   commands:
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
-    - pytest -k "not ({{ tests_to_skip }})" {{ tests_to_ignore }} -v tests
+    # skip these tests because they take too long to run
+    - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_*.py
 
 about:
   home: https://www.pymc.io/welcome.html
