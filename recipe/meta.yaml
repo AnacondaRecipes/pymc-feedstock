@@ -74,7 +74,8 @@ test:
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
     # skip these tests because they take too long to run
-    - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_*.py
+    - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_*.py  # [py>=312]
+    - pytest -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_*.py  # [py<312]
 
 about:
   home: https://www.pymc.io/welcome.html
