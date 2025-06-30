@@ -70,7 +70,7 @@ test:  #[py<313]
     - zarr  #[py<313]
     - sfe1ed40::numpyro  # [py<312]
     # to avoid error about np.PINF, numpy must be <2, so on py313 it's missing for linux aarch64
-    - numpy >=1.25.0,<2  # [not (linux and aarch64 and py>=313)] 
+    - numpy >=1.25.0  # [not (linux and aarch64 and py>=313)] 
   commands:  #[py<313]
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
