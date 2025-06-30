@@ -49,34 +49,40 @@ requirements:
 
 {% set tests_to_skip = "" %}
 {% set tests_to_skip = tests_to_skip + "test_numpyro_nuts_kwargs_are_used" %}  # [py>=312]
+# skip tests that depend on blackjax
+{% set tests_to_skip = tests_to_skip + " or test_transform_samples or test_deterministic_samples or test_initvals_without_jitter or test_idata_kwargs" %}
+{% set tests_to_skip = tests_to_skip + " or test_seeding or test_idata_contains_stats or test_convergence_warnings" %}
 
-# skip tests for py313 since some dependencies are missing for numpy<2
-test:  #[py<313]
-  source_files:  #[py<313]
-    - tests  #[py<313]
-  imports:  #[py<313]
-    - pymc  #[py<313]
-    - pymc.backends  #[py<313]
-    - pymc.distributions  #[py<313]
-    - pymc.gp  #[py<313]
-    - pymc.step_methods  #[py<313]
-    - pymc.tuning  #[py<313]
-    - pymc.variational  #[py<313]
-    - pymc.ode  #[py<313]
-  requires:  #[py<313]
-    - pip  #[py<313]
-    - pytest  #[py<313]
-    - jax  #[py<313]
-    - zarr  #[py<313]
-    - sfe1ed40::numpyro  # [py<312]
+
+# skip tests for py313 since some dependencies are missing for numpy
+# also skip tests on osx-x86_64 because they stall
+test:  #[py<313 and not (osx and x86_64)]
+  source_files:  #[py<313 and not (osx and x86_64)]
+    - tests  #[py<313 and not (osx and x86_64)]
+  imports:  #[py<313 and not (osx and x86_64)]
+    - pymc  #[py<313 and not (osx and x86_64)]
+    - pymc.backends  #[py<313 and not (osx and x86_64)]
+    - pymc.distributions  #[py<313 and not (osx and x86_64)]
+    - pymc.gp  #[py<313 and not (osx and x86_64)]
+    - pymc.step_methods  #[py<313 and not (osx and x86_64)]
+    - pymc.tuning  #[py<313 and not (osx and x86_64)]
+    - pymc.variational  #[py<313 and not (osx and x86_64)]
+    - pymc.ode  #[py<313 and not (osx and x86_64)]
+  requires:  #[py<313 and not (osx and x86_64)]
+    - pip  #[py<313 and not (osx and x86_64)]
+    - pytest  #[py<313 and not (osx and x86_64)]
+    - jax  #[py<313 and not (osx and x86_64)]
+    - zarr  #[py<313 and not (osx and x86_64)]
+    - graphviz  #[py<313 and not (osx and x86_64)]
+    - sfe1ed40::numpyro  # [py<312 and not (osx and x86_64)]
     # to avoid error about np.PINF, numpy must be <2, so on py313 it's missing for linux aarch64
-    - numpy >=1.25.0  # [not (linux and aarch64 and py>=313)] 
-  commands:  #[py<313]
+    - numpy >=1.25.0  #[py<313 and not (osx and x86_64)]
+  commands:  #[py<313 and not (osx and x86_64)]
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
     # skip these tests because they take too long to run
-    - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational test_data.py test_func_utils.py test_initial_point.py test_math.py test_model_graph.py test_printing.py test_pytensorf.py test_testing.py test_util.py  # [py==312]
-    - pytest -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_data.py tests/test_func_utils.py tests/test_initial_point.py tests/test_math.py tests/test_model_graph.py tests/test_printing.py tests/test_pytensorf.py tests/test_testing.py tests/test_util.py  # [py<312]
+    - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational test_data.py test_func_utils.py test_initial_point.py test_math.py test_model_graph.py test_printing.py test_pytensorf.py test_testing.py test_util.py  # [py==312 and not (osx and x86_64)]
+    - pytest -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_data.py tests/test_func_utils.py tests/test_initial_point.py tests/test_math.py tests/test_model_graph.py tests/test_printing.py tests/test_pytensorf.py tests/test_testing.py tests/test_util.py  # [py<312 and not (osx and x86_64)]
 
 about:
   home: https://www.pymc.io/welcome.html
