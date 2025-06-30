@@ -50,32 +50,33 @@ requirements:
 {% set tests_to_skip = "" %}
 {% set tests_to_skip = tests_to_skip + "test_numpyro_nuts_kwargs_are_used" %}  # [py>=312]
 
-test:
-  source_files:
-    - tests
-  imports:
-    - pymc
-    - pymc.backends
-    - pymc.distributions
-    - pymc.gp
-    - pymc.step_methods
-    - pymc.tuning
-    - pymc.variational
-    - pymc.ode
-  requires:
-    - pip
-    - pytest
-    - jax
-    - zarr
+# skip tests for py313 since some dependencies are missing for numpy<2
+test:  #[py<313]
+  source_files:  #[py<313]
+    - tests  #[py<313]
+  imports:  #[py<313]
+    - pymc  #[py<313]
+    - pymc.backends  #[py<313]
+    - pymc.distributions  #[py<313]
+    - pymc.gp  #[py<313]
+    - pymc.step_methods  #[py<313]
+    - pymc.tuning  #[py<313]
+    - pymc.variational  #[py<313]
+    - pymc.ode  #[py<313]
+  requires:  #[py<313]
+    - pip  #[py<313]
+    - pytest  #[py<313]
+    - jax  #[py<313]
+    - zarr  #[py<313]
     - sfe1ed40::numpyro  # [py<312]
     # to avoid error about np.PINF, numpy must be <2, so on py313 it's missing for linux aarch64
-    - numpy >=1.25.0,<2  # [not (linux and aarch64 and py>=313)]
-  commands:
+    - numpy >=1.25.0,<2  # [not (linux and aarch64 and py>=313)] 
+  commands:  #[py<313]
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
     # skip these tests because they take too long to run
-    - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational test_data.py test_func_utils.py test_initial_point.py test_math.py test_model_graph.py test_printing.py test_pytensorf.py test_testing.py test_util.py  # [py>=312 and not (linux and aarch64 and py>=313)]
-    - pytest -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational test_data.py test_func_utils.py test_initial_point.py test_math.py test_model_graph.py test_printing.py test_pytensorf.py test_testing.py test_util.py  # [py<312]
+    - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational test_data.py test_func_utils.py test_initial_point.py test_math.py test_model_graph.py test_printing.py test_pytensorf.py test_testing.py test_util.py  # [py==312]
+    - pytest -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_data.py tests/test_func_utils.py tests/test_initial_point.py tests/test_math.py tests/test_model_graph.py tests/test_printing.py tests/test_pytensorf.py tests/test_testing.py tests/test_util.py  # [py<312]
 
 about:
   home: https://www.pymc.io/welcome.html
