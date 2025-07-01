@@ -49,10 +49,11 @@ requirements:
     - threadpoolctl >=3.1.0,<4.0.0
 
 {% set tests_to_skip = "" %}
-{% set tests_to_skip = tests_to_skip + "test_numpyro_nuts_kwargs_are_used" %}  # [py>=312]
 # skip tests that depend on blackjax
-{% set tests_to_skip = tests_to_skip + " or test_transform_samples or test_deterministic_samples or test_initvals_without_jitter or test_idata_kwargs" %}
+{% set tests_to_skip = tests_to_skip + "test_transform_samples or test_deterministic_samples or test_initvals_without_jitter or test_idata_kwargs" %}
 {% set tests_to_skip = tests_to_skip + " or test_seeding or test_idata_contains_stats or test_convergence_warnings" %}
+# only <312 has numpyro
+{% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used" %}  # [py>=312]
 
 
 # skip tests for py313 since some dependencies are missing for numpy
