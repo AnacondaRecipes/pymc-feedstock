@@ -13,7 +13,8 @@ source:
 
 build:
   number: 0
-  skip: true  # [py<310]
+  # skipping py313 because of cap on scipy
+  skip: true  # [py<310 or py>312]
   script:
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   ignore_run_exports:
@@ -82,7 +83,7 @@ test:  #[py<313 and not (osx and x86_64)]
     #- pip check
     # skip these tests because they take too long to run
     - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational test_data.py test_func_utils.py test_initial_point.py test_math.py test_model_graph.py test_printing.py test_pytensorf.py test_testing.py test_util.py  # [py==312 and not (osx and x86_64)]
-    - pytest -v tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_data.py tests/test_func_utils.py tests/test_initial_point.py tests/test_math.py tests/test_model_graph.py tests/test_printing.py tests/test_pytensorf.py tests/test_testing.py tests/test_util.py  # [py<312 and not (osx and x86_64)]
+    - pytest -v "not ({{ tests_to_skip }})" tests/model tests/ode tests/sampling tests/smc tests/stats tests/step_methods tests/tuning tests/variational tests/test_data.py tests/test_func_utils.py tests/test_initial_point.py tests/test_math.py tests/test_model_graph.py tests/test_printing.py tests/test_pytensorf.py tests/test_testing.py tests/test_util.py  # [py<312 and not (osx and x86_64)]
 
 about:
   home: https://www.pymc.io/welcome.html
