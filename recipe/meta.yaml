@@ -52,11 +52,15 @@ requirements:
 # skip tests that depend on blackjax
 {% set tests_to_skip = tests_to_skip + "test_transform_samples or test_deterministic_samples or test_initvals_without_jitter or test_idata_kwargs" %}
 {% set tests_to_skip = tests_to_skip + " or test_seeding or test_idata_contains_stats or test_convergence_warnings" %}
+# skip tests that depend on graphviz because of missing binaries
+{% set tests_to_skip = tests_to_skip + " or test_graphviz or test_checks_formatting or test_unknown_node_type or test_custom_node_formatting_networkx or test_custom_node_formatting_graphviz" %}  # [linux]
+# skip tests that depend on flapack failed import on macos
+{% set tests_to_skip = tests_to_skip + " or test_convergence_checks or test_return_datatype or test_kernel_kwargs or test_marginal_likelihood or test_parallel_custom" %}  # [osx]
 # only <312 has numpyro
-{% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used" %}  # [py>=312]
+{% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used %}  # [py>=312]
 
 
-# also skip tests on osx-x86_64 because they stall
+# also skip tests on osx-x86_64 because they stall on CI
 test:  #[py<313 and not (osx and x86_64)]
   source_files:  #[not (osx and x86_64)]
     - tests  #[not (osx and x86_64)]
@@ -74,7 +78,6 @@ test:  #[py<313 and not (osx and x86_64)]
     - pytest  #[not (osx and x86_64)]
     - jax  #[not (osx and x86_64)]
     - zarr  #[not (osx and x86_64)]
-    - graphviz  #[not (osx and x86_64)]
     - sfe1ed40::numpyro  # [py<312 and not (osx and x86_64)]
     # to avoid error about np.PINF, numpy must be <2, so on py313 it's missing for linux aarch64
     - numpy >=1.25.0  #[not (osx and x86_64)]
