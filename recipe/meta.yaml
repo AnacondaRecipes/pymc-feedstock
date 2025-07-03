@@ -57,7 +57,7 @@ requirements:
 # skip tests that depend on flapack failed import on macos
 {% set tests_to_skip = tests_to_skip + " or test_convergence_checks or test_return_datatype or test_kernel_kwargs or test_marginal_likelihood or test_parallel_custom" %}  # [osx]
 # only <312 has numpyro
-{% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used %}  # [py>=312]
+{% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used"%}  # [py>=312]
 
 
 # also skip tests on osx-x86_64 because they stall on CI
