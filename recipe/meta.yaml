@@ -53,7 +53,7 @@ requirements:
 {% set tests_to_skip = tests_to_skip + "test_transform_samples or test_deterministic_samples or test_initvals_without_jitter or test_idata_kwargs" %}
 {% set tests_to_skip = tests_to_skip + " or test_seeding or test_idata_contains_stats or test_convergence_warnings" %}
 # skip tests that depend on graphviz because of missing binaries
-{% set tests_to_skip = tests_to_skip + " or test_graphviz or test_checks_formatting or test_unknown_node_type or test_custom_node_formatting_networkx or test_custom_node_formatting_graphviz" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_graphviz or test_checks_formatting or test_unknown_node_type or test_custom_node_formatting_networkx or test_custom_node_formatting_graphviz" %}  # [linux or win]
 # skip tests that depend on flapack failed import on macos
 {% set tests_to_skip = tests_to_skip + " or test_convergence_checks or test_return_datatype or test_kernel_kwargs or test_marginal_likelihood or test_parallel_custom" %}  # [osx]
 # only <312 has numpyro
