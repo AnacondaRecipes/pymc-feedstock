@@ -1,5 +1,5 @@
-{% set version = "5.23.0" %}
 {% set name = "pymc" %}
+{% set version = "5.23.0" %}
 
 package:
   name: {{ name }}
