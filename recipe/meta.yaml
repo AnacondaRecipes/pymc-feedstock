@@ -89,6 +89,7 @@ test:  #[py<313 and not (osx and x86_64)]
     # to avoid error about np.PINF, numpy must be <2, so on py313 it's missing for linux aarch64
     - numpy >=1.25.0  #[not (osx and x86_64)]
   commands:  #[not (osx and x86_64)]
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
     #- pip check
     # skip these tests because they take too long to run
