@@ -25,8 +25,8 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('fortran') }}
-    - patch     # [not win]
-    - m2-patch  # [win]
+    - patch     # [not win and py>=312]
+    - m2-patch  # [win and py>=312]
   host:
     - python
     - pip
