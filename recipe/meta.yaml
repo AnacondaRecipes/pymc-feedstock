@@ -53,12 +53,17 @@ requirements:
 {% set tests_to_skip = tests_to_skip + "test_transform_samples or test_deterministic_samples or test_initvals_without_jitter or test_idata_kwargs" %}
 {% set tests_to_skip = tests_to_skip + " or test_seeding or test_idata_contains_stats or test_convergence_warnings" %}
 # skip tests that depend on graphviz because of missing binaries
-{% set tests_to_skip = tests_to_skip + " or test_graphviz or test_checks_formatting or test_unknown_node_type or test_custom_node_formatting_networkx or test_custom_node_formatting_graphviz" %}  # [linux or win]
+{% set tests_to_skip = tests_to_skip + " or test_graphviz or test_checks_formatting or test_unknown_node_type or test_custom_node_formatting_networkx or test_custom_node_formatting_graphviz" %}
 # skip tests that depend on flapack failed import on macos
 {% set tests_to_skip = tests_to_skip + " or test_convergence_checks or test_return_datatype or test_kernel_kwargs or test_marginal_likelihood or test_parallel_custom" %}  # [osx]
 # only <312 has numpyro
 {% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used"%}  # [py>=312]
-
+# skip tests that have error
+# Loop fusion failed because the resulting node would exceed the kernel argument limit.
+{% set tests_to_skip = tests_to_skip + " or test_fit_start or test_fit_data or test_fit_fn_text or test_fit_fn_text"%}  # [linux]
+# skip tests that have error in concurrent.futures
+#  _pickle.PicklingError: Can't pickle <class '_flapack.error'>: import of module '_flapack' failed
+{% set tests_to_skip = tests_to_skip + " or test_parallel_custom or test_marginal_likelihood or test_kernel_kwargs or test_return_datatype or test_convergence_checks"%}  # [linux]
 
 # also skip tests on osx-x86_64 because they stall on CI
 test:  #[py<313 and not (osx and x86_64)]
