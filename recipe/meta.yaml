@@ -8,8 +8,6 @@ package:
 source:
   url: https://github.com/{{ name }}-devs/{{ name }}/archive/v{{ version }}.tar.gz
   sha256: 8d27f49167f054b707eaa70b02f45033c8a98c1e1ea427ec82bb27fc24f1bafd
-  patches:
-    - 0001-patch-out-numpyro.patch  # [py>=312]
 
 build:
   number: 0
@@ -25,8 +23,6 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('fortran') }}
-    - patch     # [not win and py>=312]
-    - m2-patch  # [win and py>=312]
   host:
     - python
     - pip
@@ -56,8 +52,8 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_graphviz or test_checks_formatting or test_unknown_node_type or test_custom_node_formatting_networkx or test_custom_node_formatting_graphviz" %}
 # skip tests that depend on flapack failed import on macos
 {% set tests_to_skip = tests_to_skip + " or test_convergence_checks or test_return_datatype or test_kernel_kwargs or test_marginal_likelihood or test_parallel_custom" %}  # [osx]
-# only <312 has numpyro
-{% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used"%}  # [py>=312]
+# skip tests depending on numpyro (only present in private channel)
+{% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used"%}
 # skip tests that have error
 # Loop fusion failed because the resulting node would exceed the kernel argument limit.
 {% set tests_to_skip = tests_to_skip + " or test_fit_start or test_fit_data or test_fit_fn_text or test_fit_fn_text or test_fit_oo"%}  # [linux]
@@ -85,7 +81,6 @@ test:  #[py<313 and not (osx and x86_64)]
     - pytest  #[not (osx and x86_64)]
     - jax  #[not (osx and x86_64)]
     - zarr  #[not (osx and x86_64)]
-    - sfe1ed40::numpyro  # [py<312 and not (osx and x86_64)]
     # to avoid error about np.PINF, numpy must be <2, so on py313 it's missing for linux aarch64
     - numpy >=1.25.0  #[not (osx and x86_64)]
   commands:  #[not (osx and x86_64)]
