@@ -55,18 +55,14 @@ requirements:
 # skip tests depending on numpyro (only present in private channel)
 {% set tests_to_skip = tests_to_skip + " or test_numpyro_nuts_kwargs_are_used"%}
 # skip tests that have error
-# Loop fusion failed because the resulting node would exceed the kernel argument limit.
-{% set tests_to_skip = tests_to_skip + " or test_fit_start or test_fit_data or test_fit_fn_text or test_fit_fn_text or test_fit_oo"%}  # [linux]
+# Loop fusion failed because of following error:
+# E UserWarning: Loop fusion failed because the resulting node would exceed the kernel argument limit.
+{% set tests_to_skip = tests_to_skip + " or test_fit_start or test_fit_data or test_fit_fn_text or test_fit_oo"%}
 # skip tests that have error in concurrent.futures
 #  _pickle.PicklingError: Can't pickle <class '_flapack.error'>: import of module '_flapack' failed (non-critical error)
 {% set tests_to_skip = tests_to_skip + " or test_parallel_custom or test_marginal_likelihood or test_kernel_kwargs or test_return_datatype or test_convergence_checks"%}  # [linux]
 # skip test that fails with cast error on win-64 (non-critical error)
 {% set tests_to_skip = tests_to_skip + " or test_inputs_preserved"%}  # [win]
-# E  UserWarning: Loop fusion failed because the resulting node would exceed the kernel argument limit.
-{% set tests_to_skip = tests_to_skip + " or test_fit_oo"%}  # [win]
-{% set tests_to_skip = tests_to_skip + " or test_fit_start"%}  # [win]
-{% set tests_to_skip = tests_to_skip + " or test_fit_start"%}  # [win]
-{% set tests_to_skip = tests_to_skip + " or test_fit_fn_text"%}  # [win]
 
 # also skip tests on osx-x86_64 because they stall on CI
 test:  #[py<313 and not (osx and x86_64)]
