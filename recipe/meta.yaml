@@ -14,9 +14,6 @@ build:
   skip: true  # [py<310]
   script:
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  ignore_run_exports:
-    - numpy
-    - libstdcxx-ng
 
 requirements:
   build:
@@ -33,7 +30,9 @@ requirements:
   run:
     - python
     - numpy >=1.25.0
-    - arviz >=0.13.0
+    # rviz >=0.13,<0.18 is broken, so we need to use >=0.18.0, more details:
+    # https://discourse.pymc.io/t/importerror-cannot-import-name-gaussian-from-scipy-signal/14170/7
+    - arviz >=0.18.0
     - cachetools >=4.2.1
     - cloudpickle
     - pandas >=0.24.0
