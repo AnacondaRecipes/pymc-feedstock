@@ -1,0 +1,2 @@
+fortran_compiler_version:  # [osx or linux]
+  - 14.3.0  # [osx or linux]
