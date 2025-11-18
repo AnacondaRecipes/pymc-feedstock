@@ -14,6 +14,9 @@ build:
   skip: true  # [py<310]
   script:
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  ignore_run_exports:
+    - numpy
+    - libstdcxx-ng
 
 requirements:
   build:
