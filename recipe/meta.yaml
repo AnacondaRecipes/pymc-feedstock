@@ -10,9 +10,8 @@ source:
   sha256: 8d27f49167f054b707eaa70b02f45033c8a98c1e1ea427ec82bb27fc24f1bafd
 
 build:
-  number: 0
-  # compatible scipy version packages need a py313 rebuild
-  skip: true  # [py<310 or py>312]
+  number: 1
+  skip: true  # [py<310]
   script:
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   ignore_run_exports:
@@ -21,6 +20,7 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('fortran') }}
   host:
@@ -33,7 +33,9 @@ requirements:
   run:
     - python
     - numpy >=1.25.0
-    - arviz >=0.13.0
+    # arviz >=0.13,<0.18 is broken, so we need to use >=0.18.0, more details:
+    # https://discourse.pymc.io/t/importerror-cannot-import-name-gaussian-from-scipy-signal/14170/7
+    - arviz >=0.18.0
     - cachetools >=4.2.1
     - cloudpickle
     - pandas >=0.24.0
