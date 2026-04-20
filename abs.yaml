@@ -1,2 +1,3 @@
 channels:
   - https://staging.continuum.io/pbp/fs/pytensor-feedstock/pr12/442eaf8
+  - https://staging.continuum.io/pbp/fs/arviz-feedstock/pr10/916cf0e
