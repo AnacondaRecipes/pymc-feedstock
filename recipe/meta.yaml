@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/{{ name }}-devs/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 8d27f49167f054b707eaa70b02f45033c8a98c1e1ea427ec82bb27fc24f1bafd
+  sha256: 064fa7bdbdf7f102f2d4521cfee8e09a8ad4a6b37a436ea2d52620ccc5f3b7f0
 
 build:
   number: 0
