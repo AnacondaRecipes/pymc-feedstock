@@ -1,5 +1,5 @@
 {% set name = "pymc" %}
-{% set version = "5.23.0" %}
+{% set version = "5.28.4" %}
 
 package:
   name: {{ name }}
@@ -10,8 +10,8 @@ source:
   sha256: 8d27f49167f054b707eaa70b02f45033c8a98c1e1ea427ec82bb27fc24f1bafd
 
 build:
-  number: 2
-  skip: true  # [py<310]
+  number: 0
+  skip: true  # [py<311]
   script:
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   ignore_run_exports:
@@ -35,11 +35,11 @@ requirements:
     - numpy >=1.25.0
     # arviz >=0.13,<0.18 is broken, so we need to use >=0.18.0, more details:
     # https://discourse.pymc.io/t/importerror-cannot-import-name-gaussian-from-scipy-signal/14170/7
-    - arviz >=0.18.0
-    - cachetools >=4.2.1
+    - arviz >=0.18.0,<1.0
+    - cachetools >=4.2.1,<7
     - cloudpickle
     - pandas >=0.24.0
-    - pytensor >=2.31.2,<2.32
+    - pytensor >=2.38.2,<2.39
     - scipy >=1.4.1
     - rich >=13.7.1
     - typing-extensions >=3.7.4
@@ -65,32 +65,31 @@ requirements:
 # skip test that fails with cast error on win-64 (non-critical error)
 {% set tests_to_skip = tests_to_skip + " or test_inputs_preserved"%}  # [win]
 
-# also skip tests on osx-x86_64 because they stall on CI
-test:  #[py<313 and not (osx and x86_64)]
-  source_files:  #[not (osx and x86_64)]
-    - tests  #[not (osx and x86_64)]
-  imports:  #[not (osx and x86_64)]
-    - pymc  #[not (osx and x86_64)]
-    - pymc.backends  #[not (osx and x86_64)]
-    - pymc.distributions  #[not (osx and x86_64)]
-    - pymc.gp  #[not (osx and x86_64)]
-    - pymc.step_methods  #[not (osx and x86_64)]
-    - pymc.tuning  #[not (osx and x86_64)]
-    - pymc.variational  #[not (osx and x86_64)]
-    - pymc.ode  #[not (osx and x86_64)]
-  commands:  #[not (osx and x86_64)]
+test:
+  source_files:
+    - tests
+  imports:
+    - pymc
+    - pymc.backends
+    - pymc.distributions
+    - pymc.gp
+    - pymc.step_methods
+    - pymc.tuning
+    - pymc.variational
+    - pymc.ode
+  commands:
     # skip pip check because it fails due to asciitree which is pulled by other test requirements
-    #- pip check
+    - pip check
     # skip the tests because they take too long to run, though they all pass on each platform
     #- pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/smc tests/stats tests/step_methods tests/tuning tests/variational  # [py==312 and not (osx and x86_64)]
     #- pytest -k "not ({{ tests_to_skip }})" -v tests/test_data.py tests/test_func_utils.py tests/test_initial_point.py tests/test_math.py tests/test_model_graph.py tests/test_printing.py tests/test_pytensorf.py tests/test_testing.py tests/test_util.py  # [py<312 and not (osx and x86_64)]
-  requires:  #[not (osx and x86_64)]
-    - pip  #[not (osx and x86_64)]
-    - pytest  #[not (osx and x86_64)]
-    - jax  #[not (osx and x86_64)]
-    - zarr  #[not (osx and x86_64)]
+  requires:
+    - pip
+    - pytest
+    - jax
+    - zarr
     # to avoid error about np.PINF, numpy must be <2, so on py313 it's missing for linux aarch64
-    - numpy >=1.25.0  #[not (osx and x86_64)]
+    - numpy >=1.25.0
 
 about:
   home: https://www.pymc.io/welcome.html
