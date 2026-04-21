@@ -68,6 +68,9 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_normal_model"%}  # [linux or win]
 # skip TestMetropolis::test_elemwise_update parametrized cases that timeout
 {% set tests_to_skip = tests_to_skip + " or batched_dist3 or batched_dist4"%}
+# skip all test_elemwise_update on windows - pytensor falls back to pure Python without g++
+# causing multiprocess sampling to hang on WaitForMultipleObjects
+{% set tests_to_skip = tests_to_skip + " or test_elemwise_update"%}  # [win]
 
 test:
   source_files:
