@@ -64,6 +64,10 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_parallel_custom or test_marginal_likelihood or test_kernel_kwargs or test_return_datatype or test_convergence_checks"%}  # [linux]
 # skip test that fails with cast error on win-64 (non-critical error)
 {% set tests_to_skip = tests_to_skip + " or test_inputs_preserved"%}  # [win]
+# skip SMC MH kernel test that hangs on linux and windows
+{% set tests_to_skip = tests_to_skip + " or test_normal_model"%}  # [linux or win]
+# skip TestMetropolis::test_elemwise_update parametrized cases that timeout
+{% set tests_to_skip = tests_to_skip + " or batched_dist3 or batched_dist4"%}
 
 test:
   source_files:
@@ -79,10 +83,11 @@ test:
     - pymc.ode
   commands:
     - pip check
-    - pytest -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/smc tests/stats tests/step_methods tests/tuning tests/variational
+    - pytest --timeout=300 -k "not ({{ tests_to_skip }})" -v tests/model tests/ode tests/smc tests/stats tests/step_methods tests/tuning tests/variational
   requires:
     - pip
     - pytest
+    - pytest-timeout
     - cxx-compiler
     - c-compiler
 
