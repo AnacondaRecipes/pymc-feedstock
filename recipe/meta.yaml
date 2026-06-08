@@ -58,8 +58,10 @@ test:
     - pymc.model_graph
   commands:
     - pip check
-    # 6.x sdist ships a small flat tests/ tree (no sampling suite); skip graphviz-only cases.
-    - pytest --timeout=300 -k "not test_graphviz" -v tests
+    # 6.x PyPI sdist ships a flat tests/ tree (no sampling suite). Run as a module so
+    # `from tests.*` imports resolve; ignore modules that need helpers.py/models.py
+    # missing from the sdist.
+    - python -m pytest --timeout=300 -k "not test_graphviz" --ignore=tests/test_math.py --ignore=tests/test_testing.py -v tests
   requires:
     - pip
     - pytest
