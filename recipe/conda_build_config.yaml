@@ -1,6 +1,2 @@
-fortran_compiler_version:
-  - 14.3.0  # [osx or linux]
-  - "20"    # [win]
-
 fortran_compiler:          # [win]
   - flang                  # [win]
